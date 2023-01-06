@@ -1,1 +1,3 @@
-print("blob")
+from game import game
+
+game.play()
