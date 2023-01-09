@@ -2,6 +2,14 @@ import configparser
 import os
 
 
+def load_map(path):
+    arr = []
+    with open(path, "r") as file:
+        for line in file.readlines():
+            arr.append(list(line.strip()))
+    return arr
+
+
 def create_config(path):
     config = configparser.ConfigParser()
     config.read_dict({'Grey Slime': {'hp': '100', 'speed': '1', 'magic': '0', 'physical': '0'},
@@ -36,12 +44,12 @@ class Tower:
         self.price_by_level = float(price_by_level)
 
 
-class Config:
-    def __init__(self, path: str):
-        if not os.path.exists(path):
-            create_config(path)
+class BaseConfig:
+    def __init__(self, config_path: str, map_path: str):
+        if not os.path.exists(config_path):
+            create_config(config_path)
         config = configparser.ConfigParser()
-        config.read(path)
+        config.read(config_path)
         self.grey_slime = Slime(**dict(config.items("Grey Slime")))
         self.blue_slime = Slime(**dict(config.items("Blue Slime")))
         self.green_slime = Slime(**dict(config.items("Green Slime")))
@@ -51,7 +59,19 @@ class Config:
         self.physical_tower = Tower(**dict(config.items("Physical Tower")))
         self.screen_width = int(config.get("Screen", "width"))
         self.screen_height = int(config.get("Screen", "height"))
+        self.size = self.screen_width, self.screen_height
         self.fps = int(config.get("Screen", "fps"))
         self.rows_count = int(config.get("Screen", "rows"))
         self.columns_count = int(config.get("Screen", "columns"))
         self.cell_size = (round(self.screen_width / self.columns_count), round(self.screen_height / self.rows_count))
+        self.map = load_map(map_path)
+
+
+class Config(BaseConfig):
+    def __init__(self, config_path: str, map_path: str):
+        self.config_path = config_path
+        self.map_path = map_path
+        super().__init__(config_path, map_path)
+
+    def update(self):
+        super().__init__(self.config_path, self.map_path)

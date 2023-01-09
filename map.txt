@@ -1,0 +1,16 @@
+xxxxxxxxxxxxxxxx
+xxxoooooxxxxxxxx
+xxo>>>_xxxxxxxxx
+xxx^xx_ooxxxxxxx
+xoo^xx_xxxooxoox
+s>>^oo_ooo>>>>>e
+xxxxxx_xxx^xxxxx
+xooooo_oxx^oooxx
+xx_<<<<xxx^<<<xx
+xo_xxxxoooxxx^ox
+xx_oooxxxxxoo^xx
+xo>>>>>>>>>>>^ox
+xxxxxxxxxxxxxxxx
+xooooooooxoooxxx
+xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx
