@@ -5,13 +5,13 @@ from pygame import image, transform
 from config import config
 
 
-def get_slime_images(path):
-    return [image.load(path + "/walk/" + file) for file in (listdir(path + "/walk"))]
+def get_images(path):
+    return [image.load(path + "/" + file) for file in listdir(path)]
 
 
 class SlimeImages:
     def __init__(self, path):
-        self.walk = get_slime_images(path)
+        self.walk = get_images(path + "/walk")
 
 
 class Images(object):
@@ -21,3 +21,4 @@ class Images(object):
     grey_slime = SlimeImages("sprites/slimes/grey")
     purple_slime = SlimeImages("sprites/slimes/purple")
     red_slime = SlimeImages("sprites/slimes/red")
+    coin = get_images("sprites/coin")

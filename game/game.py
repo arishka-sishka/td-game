@@ -1,15 +1,19 @@
 import pygame
 
+import utils
 from config import config
+from game.coin import Coin
 from images import images
 
 
 class Game:
     def __init__(self):
-        self.display = pygame.display.set_mode((config.screen_width, config.screen_height))
+        self.display = pygame.display.set_mode(config.size)
+        self.display.set_alpha(205)
         self.clock = pygame.time.Clock()
         self.run = True
         self.score = 0
+        self.coin = pygame.sprite.GroupSingle(Coin((20, 20)))
 
     def play(self):
         while self.run:
@@ -22,7 +26,10 @@ class Game:
 
     def draw_window(self):
         self.display.blit(images.background, (0, 0))
-        for i in range(config.rows_count):
-            for j in range(config.columns_count):
-                pygame.draw.rect(self.display, "#000000", (j * config.cell_size[0], i * config.cell_size[1], config.cell_size[0], config.cell_size[1]), 1)
+        self.coin.draw(self.display)
+        self.coin.update()
+        # отображение доступных мест постройки
+        if 1:
+            utils.draw_available(self.display)
+
         pygame.display.update()
