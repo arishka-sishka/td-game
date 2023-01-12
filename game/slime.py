@@ -1,4 +1,5 @@
 from itertools import cycle
+from math import ceil
 
 import pygame
 
@@ -32,10 +33,10 @@ class Slime(pygame.sprite.Sprite):
     def x(self):
         data = config.map[self.cell[1]][self.cell[0]]
         if data == "]":
-            self.rect = self.rect.move(0, -2)
+            self.rect = self.rect.move(0, -self.vertical_speed)
             return 1
         if data == "[":
-            self.rect = self.rect.move(0, 2)
+            self.rect = self.rect.move(0, self.vertical_speed)
             return 1
         if data == ">" or data == "s":
             return 1
@@ -53,6 +54,10 @@ class Slime(pygame.sprite.Sprite):
         if data == "_":
             return 1
         return 0
+
+    @property
+    def vertical_speed(self):
+        return ceil(self.stats.speed / 2)
 
     def update(self, *args, **kwargs):
         self.skip = not self.skip
