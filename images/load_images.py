@@ -32,7 +32,6 @@ class Images:
         self.grey_slime = SlimeImages("sprites/slimes/grey")
         self.purple_slime = SlimeImages("sprites/slimes/purple")
         self.red_slime = SlimeImages("sprites/slimes/red")
-        self.coin = get_images("sprites/coin")
 
     def __getitem__(self, item):
         match item:
