@@ -1,13 +1,19 @@
 import configparser
 import os
 
+import pygame.font
+
+import constants
+
 
 def load_map(path):
     arr = []
     with open(path, "r") as file:
-        for line in file.readlines():
+        for count, line in enumerate(file.readlines()):
+            if "s" in line:
+                start = (0, count)
             arr.append(list(line.strip()))
-    return arr
+    return arr, start
 
 
 def create_config(path):
@@ -45,18 +51,23 @@ class Tower:
 
 
 class BaseConfig:
-    def __init__(self, config_path: str, map_path: str):
+    def __init__(self, config_path: str, map_path: str, font_path: str):
         if not os.path.exists(config_path):
             create_config(config_path)
         config = configparser.ConfigParser()
         config.read(config_path)
+        # init slimes
         self.grey_slime = Slime(**dict(config.items("Grey Slime")))
         self.blue_slime = Slime(**dict(config.items("Blue Slime")))
         self.green_slime = Slime(**dict(config.items("Green Slime")))
         self.purple_slime = Slime(**dict(config.items("Purple Slime")))
         self.red_slime = Slime(**dict(config.items("Red Slime")))
+        self.slime_size = int(config.get("Screen", "slime_size"))
+        self.slime_size = (self.slime_size, self.slime_size)
+        # init towers
         self.magic_tower = Tower(**dict(config.items("Magic Tower")))
         self.physical_tower = Tower(**dict(config.items("Physical Tower")))
+        # init screen
         self.screen_width = int(config.get("Screen", "width"))
         self.screen_height = int(config.get("Screen", "height"))
         self.size = self.screen_width, self.screen_height
@@ -64,14 +75,31 @@ class BaseConfig:
         self.rows_count = int(config.get("Screen", "rows"))
         self.columns_count = int(config.get("Screen", "columns"))
         self.cell_size = (round(self.screen_width / self.columns_count), round(self.screen_height / self.rows_count))
-        self.map = load_map(map_path)
+        # init font
+        self.font_size = int(config.get("Screen", "font_size"))
+        self.font = pygame.font.Font(font_path, self.font_size)
+        # init map
+        self.map, self.start = load_map(map_path)
 
 
 class Config(BaseConfig):
-    def __init__(self, config_path: str, map_path: str):
+    def __init__(self, config_path: str, map_path: str, font_path: str):
         self.config_path = config_path
         self.map_path = map_path
-        super().__init__(config_path, map_path)
+        super().__init__(config_path, map_path, font_path)
+
+    def __getitem__(self, item):
+        match item:
+            case constants.color.blue:
+                return self.blue_slime
+            case constants.color.green:
+                return self.green_slime
+            case constants.color.grey:
+                return self.grey_slime
+            case constants.color.purple:
+                return self.purple_slime
+            case constants.color.red:
+                return self.red_slime
 
     def update(self):
         super().__init__(self.config_path, self.map_path)
