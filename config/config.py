@@ -93,6 +93,7 @@ class BaseConfig:
         self.start_money = int(self.config.get("Game", "start_money"))
         self.reward = int(self.config.get("Slime", "reward"))
         self.difficulty = int(self.config.get("Game", "difficulty"))
+        self.pineapple_size = (int(self.config.get("Pineapple", "size")), ) * 2
 
 
 

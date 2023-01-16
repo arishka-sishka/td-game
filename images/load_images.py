@@ -43,8 +43,8 @@ class Images:
         self.physical_projectile = get_images("sprites/projectile/physical", size=(9, 39))
         self.magic_projectile = get_images("sprites/projectile/magic")
         self.pineapple_heli = get_images("sprites/pineapple/heli", size=(52, 82))
-        self.pineapple_float = get_images("sprites/pineapple/float")
-        self.pineapple_cry = get_images("sprites/pineapple/cry")
+        self.pineapple_float = get_images("sprites/pineapple/float", size=config.pineapple_size)
+        self.pineapple_cry = get_images("sprites/pineapple/cry", size=config.pineapple_size)
         self.magic_weapon = get_images("sprites/weapon/magic")
         self.physical_weapon = get_images("sprites/weapon/physical", size=(42, 48))
 
