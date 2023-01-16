@@ -16,6 +16,7 @@ from .slime import Slime
 class Game:
     def __init__(self):
         self.display = pygame.display.set_mode(config.size)
+        pygame.display.set_caption("Блёба хочет ананас!")
         self.display.set_alpha(205)
         self.clock = pygame.time.Clock()
         self.slimes = pygame.sprite.Group()
