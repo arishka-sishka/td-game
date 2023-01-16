@@ -1,3 +1,4 @@
-from .constants import Color
+from .constants import Color, Tower
 
 color = Color()
+tower = Tower()

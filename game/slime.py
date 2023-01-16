@@ -1,8 +1,10 @@
+from copy import copy
 from itertools import cycle
 from math import ceil
 
 import pygame
 
+import data
 from config import config
 from images import images
 
@@ -12,12 +14,13 @@ class Slime(pygame.sprite.Sprite):
         super().__init__()
         self.walk_cycle = cycle(images[color].walk)
         self.pos = list(pos)
-        self.stats = config[color]
+        self.stats = copy(config[color])
         self.image = self.walk_cycle.__next__()
         self.size = list(self.image.get_size())
         self.bounding = self.image.get_bounding_rect()
         self.rect = pygame.Rect(*(self.pos + self.size))
-        self.skip = True
+        self.radius = config.slime_size[0] // 2
+        self.skip = 0
         self.cell = list(config.start)
         self.colided = False
 
@@ -60,11 +63,17 @@ class Slime(pygame.sprite.Sprite):
         return ceil(self.stats.speed / 2)
 
     def update(self, *args, **kwargs):
-        self.skip = not self.skip
-        if self.skip:
+        if self.skip == 2:
             self.image = self.walk_cycle.__next__()
             if self.x == -1:
                 self.image = pygame.transform.flip(self.image, 1, 0)
+            self.skip = 0
+        self.skip += 1
+
+        if self.stats.hp <= 0:
+            data.money += config.reward
+            data.score += 1
+            self.kill()
 
         self.rect = self.rect.move(self.vx, self.vy)
 
@@ -77,3 +86,9 @@ class Slime(pygame.sprite.Sprite):
         else:
             if not self.colided:
                 self.colided = True
+
+    def hit(self, value, type):
+        if type == "physical":
+            self.stats.hp -= self.stats.physical * value
+        elif type == "magic":
+            self.stats.hp -= self.stats.magic * value

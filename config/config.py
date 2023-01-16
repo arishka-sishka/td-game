@@ -4,16 +4,25 @@ import os
 import pygame.font
 
 import constants
+import data
 
 
 def load_map(path):
+    tower_points = []
     arr = []
     with open(path, "r") as file:
-        for count, line in enumerate(file.readlines()):
+        for count_y, line in enumerate(file.readlines()):
+            lst = []
             if "s" in line:
-                start = (0, count)
-            arr.append(list(line.strip()))
-    return arr, start
+                start = (0, count_y)
+            if "e" in line:
+                end = (len(line.strip()) - 1, count_y)
+            for count_x, symbol in enumerate(line.strip()):
+                lst.append(symbol)
+                if symbol == "o":
+                    tower_points.append((count_x, count_y))
+            arr.append(lst)
+    return arr, start, end, tower_points
 
 
 def create_config(path):
@@ -41,45 +50,50 @@ class Slime:
 
 
 class Tower:
-    def __init__(self, damage, speed, price, damage_by_level, speed_by_level, price_by_level):
+    def __init__(self, fps, damage, reload, price):
         self.damage = float(damage)
-        self.speed = float(speed)
-        self.price = float(price)
-        self.damage_by_level = float(damage_by_level)
-        self.speed_by_level = float(speed_by_level)
-        self.price_by_level = float(price_by_level)
+        self.reload = round(fps * float(reload))
+        self.price = int(price)
 
 
 class BaseConfig:
     def __init__(self, config_path: str, map_path: str, font_path: str):
         if not os.path.exists(config_path):
             create_config(config_path)
-        config = configparser.ConfigParser()
-        config.read(config_path)
-        # init slimes
-        self.grey_slime = Slime(**dict(config.items("Grey Slime")))
-        self.blue_slime = Slime(**dict(config.items("Blue Slime")))
-        self.green_slime = Slime(**dict(config.items("Green Slime")))
-        self.purple_slime = Slime(**dict(config.items("Purple Slime")))
-        self.red_slime = Slime(**dict(config.items("Red Slime")))
-        self.slime_size = int(config.get("Screen", "slime_size"))
-        self.slime_size = (self.slime_size, self.slime_size)
-        # init towers
-        self.magic_tower = Tower(**dict(config.items("Magic Tower")))
-        self.physical_tower = Tower(**dict(config.items("Physical Tower")))
+        self.config = configparser.ConfigParser()
+        self.config.read(config_path)
         # init screen
-        self.screen_width = int(config.get("Screen", "width"))
-        self.screen_height = int(config.get("Screen", "height"))
+        self.screen_width = int(self.config.get("Screen", "width"))
+        self.screen_height = int(self.config.get("Screen", "height"))
         self.size = self.screen_width, self.screen_height
-        self.fps = int(config.get("Screen", "fps"))
-        self.rows_count = int(config.get("Screen", "rows"))
-        self.columns_count = int(config.get("Screen", "columns"))
+        self.fps = int(self.config.get("Screen", "fps"))
+        self.rows_count = int(self.config.get("Screen", "rows"))
+        self.columns_count = int(self.config.get("Screen", "columns"))
         self.cell_size = (round(self.screen_width / self.columns_count), round(self.screen_height / self.rows_count))
+        # init slimes
+        self.grey_slime = Slime(**dict(self.config.items("Grey Slime")))
+        self.blue_slime = Slime(**dict(self.config.items("Blue Slime")))
+        self.green_slime = Slime(**dict(self.config.items("Green Slime")))
+        self.purple_slime = Slime(**dict(self.config.items("Purple Slime")))
+        self.red_slime = Slime(**dict(self.config.items("Red Slime")))
+        self.slime_size = (int(self.config.get("Slime", "size")),) * 2
+        # init towers
+        self.magic_tower = Tower(self.fps, **dict(self.config.items("Magic Tower")))
+        self.physical_tower = Tower(self.fps, **dict(self.config.items("Physical Tower")))
         # init font
-        self.font_size = int(config.get("Screen", "font_size"))
+        self.font_size = int(self.config.get("Screen", "font_size"))
         self.font = pygame.font.Font(font_path, self.font_size)
         # init map
-        self.map, self.start = load_map(map_path)
+        self.map, self.start, self.end, self.tower_points = load_map(map_path)
+        # init book
+        self.book_size = (int(self.config.get("Book", "size")),) * 2
+        # init bow
+        self.bow_size = (int(self.config.get("Bow", "size")),) * 2
+
+        self.start_money = int(self.config.get("Game", "start_money"))
+        self.reward = int(self.config.get("Slime", "reward"))
+        self.difficulty = int(self.config.get("Game", "difficulty"))
+
 
 
 class Config(BaseConfig):
@@ -103,3 +117,8 @@ class Config(BaseConfig):
 
     def update(self):
         super().__init__(self.config_path, self.map_path)
+
+    def write_score(self):
+        self.config.set("Game", "record", str(data.score))
+        with open(self.config_path, "w") as config_file:
+            self.config.write(config_file)
