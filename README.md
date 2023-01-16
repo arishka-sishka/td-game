@@ -1,4 +1,4 @@
-# Tower defense game
+# Блеба хочет ананас
 
 Игра жанра Tower Defense написанная на языке программирования Python с использованием библиотеки pygame
 
@@ -28,7 +28,7 @@
 | Физ. защита | 0%                                                                                               | 80%                                                                                               | 60%                                                                                              | 0%                                                                                                 | 50%                                                                                             |
 | Маг. защита | 50%                                                                                              | 50%                                                                                               | -20%                                                                                             | 0%                                                                                                 | 75%                                                                                             |
 
-## Authors
+## Авторы
 
 - [arishka-sishka](https:\\github.com\\arishka-sishka)
 - [keinerex](https:\\github.com\\keinerex)
