@@ -13,7 +13,7 @@
 
 |      Тип      | Физическая башня                                                            | Магическая башня                                                         |
 |:-------------:|-----------------------------------------------------------------------------|--------------------------------------------------------------------------|
-|   Картинка    | ![](C:\Users\keinerex\PycharmProjects\td-game\sprites\tower\physical\0.png) | ![](C:\Users\keinerex\PycharmProjects\td-game\sprites\tower\magic\0.png) |
+|   Картинка    | ![](sprites\tower\physical\0.png) | ![](C:\Users\keinerex\PycharmProjects\td-game\sprites\tower\magic\0.png) |
 |     Урон      | 20                                                                          | 25                                                                       |
 | Скорость сек. | 0.6                                                                         | 1.2                                                                      |
 |   Стоимость   | 75                                                                          | 50                                                                       |
